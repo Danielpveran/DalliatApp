@@ -105,17 +105,112 @@ class _LoginTabState extends State<LoginTab> {
   }
 }
 
-class RegisterTab extends StatelessWidget {
+// Aca empieza el register
+
+class RegisterTab extends StatefulWidget {
   const RegisterTab({super.key});
 
   @override
+  State<RegisterTab> createState() => _RegisterTabState();
+}
+
+class _RegisterTabState extends State<RegisterTab> {
+  final TextEditingController _regUsernameController = TextEditingController();
+  final TextEditingController _regPasswordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _birthDateController = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'Registro no funcional aún',
-        style: TextStyle(fontSize: 18),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: _regUsernameController,
+              decoration: const InputDecoration(
+                labelText: 'Usuario',
+                border: OutlineInputBorder(),
+                filled: true,
+                fillColor: Color.fromARGB(255, 255, 255, 255),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _regPasswordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                labelText: 'Contraseña',
+                border: OutlineInputBorder(),
+                filled: true,
+                fillColor: Color.fromARGB(255, 255, 255, 255),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(
+                labelText: 'Correo Electrónico',
+                border: OutlineInputBorder(),
+                filled: true,
+                fillColor: Color.fromARGB(255, 255, 255, 255),
+              ),
+              keyboardType: TextInputType.emailAddress,
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _birthDateController,
+              readOnly: true,
+              decoration: const InputDecoration(
+                labelText: 'Fecha de Nacimiento',
+                border: OutlineInputBorder(),
+                filled: true,
+                fillColor: Color.fromARGB(255, 255, 255, 255),
+                suffixIcon: Icon(Icons.calendar_today),
+              ),
+              onTap: () async {
+                DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime.now(),
+                );
+                if (pickedDate != null) {
+                  setState(() {
+                    _birthDateController.text = "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+                  });
+                }
+              },
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () {
+                // Aquí puedes agregar lógica de registro
+                print('Usuario: ${_regUsernameController.text}');
+                print('Contraseña: ${_regPasswordController.text}');
+                print('Correo: ${_emailController.text}');
+                print('Fecha Nacimiento: ${_birthDateController.text}');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Registro simulado exitoso')),
+                );
+              },
+              child: const Text('Registrar'),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _regUsernameController.dispose();
+    _regPasswordController.dispose();
+    _emailController.dispose();
+    _birthDateController.dispose();
+    super.dispose();
   }
 }
 
