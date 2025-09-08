@@ -10,14 +10,27 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primaryColor: const Color.fromARGB(255, 255, 255, 255),  // Color principal
+        scaffoldBackgroundColor: const Color.fromARGB(255, 226, 173, 27),  // Fondo de la pantalla
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),  // Estilo de texto general
+        ),
+      ),
       home: DefaultTabController(
         length: 2,
         child: Scaffold(
           appBar: AppBar(
             title: const Text('Dalliat App'),
+            backgroundColor: const Color.fromARGB(255, 255, 255, 255),  // Cambia el color de fondo
+            titleTextStyle: const TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            ),
             bottom: const TabBar(
               tabs: [
-                Tab(text: 'Login'),
+                Tab(text: 'LogIn'),
                 Tab(text: 'Registro'),
               ],
             ),
@@ -57,6 +70,8 @@ class _LoginTabState extends State<LoginTab> {
             decoration: const InputDecoration(
               labelText: 'Usuario',
               border: OutlineInputBorder(),
+              filled: true,  // Habilita el fondo
+              fillColor: const Color.fromARGB(255, 255, 255, 255),
             ),
           ),
           const SizedBox(height: 16),
@@ -66,6 +81,8 @@ class _LoginTabState extends State<LoginTab> {
             decoration: const InputDecoration(
               labelText: 'Contraseña',
               border: OutlineInputBorder(),
+              filled: true,  // Habilita el fondo
+              fillColor: const Color.fromARGB(255, 255, 255, 255),
             ),
           ),
           const SizedBox(height: 24),
