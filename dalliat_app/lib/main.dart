@@ -7,9 +7,17 @@ void main() {
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
+// ESTO ES DEL LOGIN
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primaryColor: Colors.blue,  // Color de la cosa que se muestra de menu
+        scaffoldBackgroundColor: const Color.fromARGB(255, 226, 173, 27),  // Fondo de la pantalla
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Colors.black),  // Estilo de texto general
+        ),
+      ),
       home: DefaultTabController(
         length: 2,
         child: Scaffold(
@@ -57,6 +65,8 @@ class _LoginTabState extends State<LoginTab> {
             decoration: const InputDecoration(
               labelText: 'Usuario',
               border: OutlineInputBorder(),
+              filled: true,
+              fillColor: Color.fromARGB(255, 255, 255, 255),
             ),
           ),
           const SizedBox(height: 16),
@@ -66,12 +76,14 @@ class _LoginTabState extends State<LoginTab> {
             decoration: const InputDecoration(
               labelText: 'Contraseña',
               border: OutlineInputBorder(),
+              filled: true,
+              fillColor: Color.fromARGB(255, 255, 255, 255),
             ),
           ),
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed: () {
-              // Aquí puedes agregar lógica de login
+              // Aca se agregara la lógica de login mas adelante cuando halla base de datos
               print('Usuario: ${_usernameController.text}');
               print('Contraseña: ${_passwordController.text}');
               ScaffoldMessenger.of(context).showSnackBar(
@@ -106,3 +118,5 @@ class RegisterTab extends StatelessWidget {
     );
   }
 }
+
+// Aca empieza el
