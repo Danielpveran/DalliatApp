@@ -10,6 +10,7 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final AuthService _authService = AuthService();
@@ -21,6 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final ok = await _authService.register(
       _usernameController.text,
       _passwordController.text,
+      _emailController.text,
     );
     if (ok) {
       setState(() {
@@ -38,45 +40,63 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Registro')),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: _usernameController,
-                decoration: const InputDecoration(labelText: 'Usuario'),
-                validator: (v) => v == null || v.isEmpty ? 'Campo requerido' : null,
-              ),
-              TextFormField(
-                controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Contraseña'),
-                obscureText: true,
-                validator: (v) => v == null || v.isEmpty ? 'Campo requerido' : null,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _register,
-                child: const Text('Registrarse'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pushNamed(context, '/login'),
-                child: const Text('¿Ya tienes cuenta? Inicia sesión'),
-              ),
-              if (_error != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Text(_error!, style: const TextStyle(color: Colors.red)),
+      appBar: AppBar(
+        title: Image.asset('lib/assets/IMG/LogoDalliat.png', height: 32),
+        centerTitle: true,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.black, Color(0xFFFFD230)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(labelText: 'Correo'),
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (v) => v == null || v.isEmpty || !v.contains('@') ? 'Correo inválido' : null,
                 ),
-              if (_success != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Text(_success!, style: const TextStyle(color: Colors.green)),
+                TextFormField(
+                  controller: _usernameController,
+                  decoration: const InputDecoration(labelText: 'Usuario'),
+                  validator: (v) => v == null || v.isEmpty ? 'Campo requerido' : null,
                 ),
-            ],
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(labelText: 'Contraseña'),
+                  obscureText: true,
+                  validator: (v) => v == null || v.isEmpty ? 'Campo requerido' : null,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _register,
+                  child: const Text('Registrarse'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pushNamed(context, '/login'),
+                  child: const Text('¿Ya tienes cuenta? Inicia sesión'),
+                ),
+                if (_error != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Text(_error!, style: const TextStyle(color: Colors.red)),
+                  ),
+                if (_success != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Text(_success!, style: const TextStyle(color: Colors.green)),
+                  ),
+              ],
+            ),
           ),
         ),
       ),

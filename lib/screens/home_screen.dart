@@ -27,9 +27,20 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Inicio')),
-      body: Center(
-        child: _jwt != null
+      appBar: AppBar(
+        title: Image.asset('lib/assets/IMG/LogoDalliat.png', height: 32),
+        centerTitle: true,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.black, Color(0xFFFFD230)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: _jwt != null
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -41,6 +52,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Text(_jwt!, style: const TextStyle(fontSize: 12)),
                   ),
                   ElevatedButton(
+                    onPressed: () => Navigator.pushNamed(context, '/shop'),
+                    child: const Text('Ir a la Tienda'),
+                  ),
+                  const SizedBox(height: 12),
+                  ElevatedButton(
                     onPressed: () async {
                       await AuthService().logout();
                       if (!mounted) return;
@@ -51,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               )
             : const Text('No autenticado'),
+        ),
       ),
     );
   }

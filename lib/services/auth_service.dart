@@ -22,12 +22,12 @@ class AuthService {
     return null;
   }
 
-  Future<bool> register(String username, String password) async {
+  Future<bool> register(String username, String password, String email) async {
     final url = Uri.parse('$baseUrl/users/register');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'username': username, 'password': password}),
+      body: jsonEncode({'username': username, 'password': password, 'email': email}),
     );
     return response.statusCode == 201;
   }

@@ -24,16 +24,31 @@ class _LoginScreenState extends State<LoginScreen> {
       _passwordController.text,
     );
     if (token != null) {
-      // Intentar autenticación biométrica
-      final didAuth = await _localAuth.authenticate(
-        localizedReason: 'Autentícate para acceder',
-        options: const AuthenticationOptions(biometricOnly: true),
-      );
-      if (didAuth) {
+      // Intentar autenticación biométrica con verificaciones y fallback
+      try {
+        final canCheck = await _localAuth.canCheckBiometrics;
+        final isSupported = await _localAuth.isDeviceSupported();
+
+        if (!(canCheck && isSupported)) {
+          if (!mounted) return;
+          Navigator.pushReplacementNamed(context, '/home');
+          return;
+        }
+
+        final didAuth = await _localAuth.authenticate(
+          localizedReason: 'Autentícate para acceder',
+          options: const AuthenticationOptions(biometricOnly: true),
+        );
+        if (didAuth) {
+          if (!mounted) return;
+          Navigator.pushReplacementNamed(context, '/home');
+        } else {
+          setState(() => _error = 'Autenticación biométrica cancelada o fallida');
+        }
+      } catch (e) {
+        // Fallback si hay excepción (no configurada/enroll o no soportada)
         if (!mounted) return;
         Navigator.pushReplacementNamed(context, '/home');
-      } else {
-        setState(() => _error = 'Autenticación biométrica fallida');
       }
     } else {
       setState(() => _error = 'Usuario o contraseña incorrectos');
@@ -43,40 +58,52 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: _usernameController,
-                decoration: const InputDecoration(labelText: 'Usuario'),
-                validator: (v) => v == null || v.isEmpty ? 'Campo requerido' : null,
-              ),
-              TextFormField(
-                controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Contraseña'),
-                obscureText: true,
-                validator: (v) => v == null || v.isEmpty ? 'Campo requerido' : null,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _login,
-                child: const Text('Iniciar sesión'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pushNamed(context, '/register'),
-                child: const Text('¿No tienes cuenta? Regístrate'),
-              ),
-              if (_error != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Text(_error!, style: const TextStyle(color: Colors.red)),
+      appBar: AppBar(
+        title: Image.asset('lib/assets/IMG/LogoDalliat.png', height: 32),
+        centerTitle: true,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.black, Color(0xFFFFD230)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextFormField(
+                  controller: _usernameController,
+                  decoration: const InputDecoration(labelText: 'Usuario'),
+                  validator: (v) => v == null || v.isEmpty ? 'Campo requerido' : null,
                 ),
-            ],
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(labelText: 'Contraseña'),
+                  obscureText: true,
+                  validator: (v) => v == null || v.isEmpty ? 'Campo requerido' : null,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _login,
+                  child: const Text('Iniciar sesión'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pushNamed(context, '/register'),
+                  child: const Text('¿No tienes cuenta? Regístrate'),
+                ),
+                if (_error != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Text(_error!, style: const TextStyle(color: Colors.red)),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
